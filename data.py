@@ -17,6 +17,7 @@ import torch
 from torch.utils.data import Dataset, DataLoader
 from tqdm import tqdm
 
+from main import *
 
 def get_img(ID):
     img_path = './image/' + ID + '.jpg'
@@ -62,4 +63,12 @@ def collate_fn(batch):
 
     return stacked_img, cat_label, idx
 
+dataloader = torch.utils.data.DataLoader(
+    TrainData,
+    batch_size=opt.batch_size,
+    shuffle=True,
+    num_workers=opt.n_cpu,
+    pin_memory=True,
+    collate_fn=collate_fn,
+    )
 
