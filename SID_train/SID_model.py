@@ -103,16 +103,17 @@ class Unet(nn.Module):
         x1 = self.inc(x)
         x2 = self.d1(x1)
         x3 = self.d2(x2)
-        adjust = self.d3(x3)[:,:,134:135,:]
-        x4 = self.d3(x3)[:,:,0:134,:]
+        x4 = self.d3(x3)
+        adjust = x4[:,:,44:45,:]        
+        x4 = x4[:, :, :-1, :]
         x5 = self.d4(x4)
         x = self.u1(x5, x4)
-        x = torch.cat([x, adjust], dim=2)
+        x = torch.cat([x, adjust], dim=2)     
+        
         x = self.u2(x, x3)
         x = self.u3(x, x2)
         x = self.u4(x, x1)
         x = self.outc(x)
-        #x = self.d2s(x)
         x = torch.sigmoid(x)
-        #print(x.shape, adjust.shape)
+
         return x
